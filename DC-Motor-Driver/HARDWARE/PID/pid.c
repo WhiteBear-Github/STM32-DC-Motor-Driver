@@ -48,6 +48,9 @@ void PID_Init()
 	PID.Ki = 2.8;
 	PID.Kd = -0.8;
 	PID.OUT = 0;
+	ShowKp();
+	ShowKi();
+	ShowKd();
 }
 
 //定时器4中断函数

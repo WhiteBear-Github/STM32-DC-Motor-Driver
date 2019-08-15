@@ -39,7 +39,7 @@ I (..\HARDWARE\ENCODER\encoder.h)(0x5D4666FF)
 I (..\HARDWARE\PID\pid.h)(0x5D483624)
 I (..\HARDWARE\LCD\lcd.h)(0x5D538AB0)
 I (d:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5475F300)
-I (..\HARDWARE\WAVEFORM\wave.h)(0x5D5407AF)
+I (..\HARDWARE\WAVEFORM\wave.h)(0x5D553D21)
 F (.\stm32f10x_it.c)(0x4EBEACB0)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\stm32f10x_it.o --omf_browse ..\obj\stm32f10x_it.crf --depend ..\obj\stm32f10x_it.d)
 I (stm32f10x_it.h)(0x4D99A426)
 I (stm32f10x.h)(0x4D783CB4)
@@ -132,7 +132,7 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_tim.h)(0x4D783BB4)
 I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x4D783BB4)
 I (..\STM32F10x_FWLib\inc\stm32f10x_wwdg.h)(0x4D783BB4)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x4D783BB4)
-F (..\HARDWARE\KEY\key.c)(0x5D54042D)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\key.o --omf_browse ..\obj\key.crf --depend ..\obj\key.d)
+F (..\HARDWARE\KEY\key.c)(0x5D553D4E)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\key.o --omf_browse ..\obj\key.crf --depend ..\obj\key.d)
 I (..\USER\stm32f10x.h)(0x4D783CB4)
 I (..\CORE\core_cm3.h)(0x4D523B58)
 I (d:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -167,10 +167,10 @@ I (..\SYSTEM\delay\delay.h)(0x555AC82B)
 I (..\HARDWARE\PID\pid.h)(0x5D483624)
 I (..\SYSTEM\usart\usart.h)(0x50517A82)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
-I (..\HARDWARE\WAVEFORM\wave.h)(0x5D5407AF)
+I (..\HARDWARE\WAVEFORM\wave.h)(0x5D553D21)
 I (..\HARDWARE\LCD\lcd.h)(0x5D538AB0)
 I (d:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5475F300)
-F (..\HARDWARE\PID\pid.c)(0x5D53F969)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\pid.o --omf_browse ..\obj\pid.crf --depend ..\obj\pid.d)
+F (..\HARDWARE\PID\pid.c)(0x5D553D21)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\pid.o --omf_browse ..\obj\pid.crf --depend ..\obj\pid.d)
 I (..\HARDWARE\PID\pid.h)(0x5D483624)
 I (..\SYSTEM\sys\sys.h)(0x550F951B)
 I (..\USER\stm32f10x.h)(0x4D783CB4)
@@ -205,7 +205,7 @@ I (..\HARDWARE\ENCODER\encoder.h)(0x5D4666FF)
 I (..\HARDWARE\PWM\pwm.h)(0x5D457A58)
 I (..\SYSTEM\usart\usart.h)(0x50517A82)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
-I (..\HARDWARE\WAVEFORM\wave.h)(0x5D5407AF)
+I (..\HARDWARE\WAVEFORM\wave.h)(0x5D553D21)
 F (..\HARDWARE\PWM\pwm.c)(0x5D467273)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\pwm.o --omf_browse ..\obj\pwm.crf --depend ..\obj\pwm.d)
 I (..\HARDWARE\PWM\pwm.h)(0x5D457A58)
 I (..\SYSTEM\sys\sys.h)(0x550F951B)
@@ -304,7 +304,7 @@ I (..\HARDWARE\LCD\font.h)(0x550289B7)
 I (..\SYSTEM\usart\usart.h)(0x50517A82)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
 I (..\SYSTEM\delay\delay.h)(0x555AC82B)
-F (..\HARDWARE\WAVEFORM\wave.c)(0x5D5409DB)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\wave.o --omf_browse ..\obj\wave.crf --depend ..\obj\wave.d)
+F (..\HARDWARE\WAVEFORM\wave.c)(0x5D553CC8)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\PWM -I..\HARDWARE\PID -I..\HARDWARE\ENCODER -I..\HARDWARE\LCD -I..\HARDWARE\WAVEFORM-I C:\Users\ÐÇ»ð»®ÆÆÌì¼ÊÊ±\Desktop\DC-Motor-Driver\USER\RTE-I d:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include-I d:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o ..\obj\wave.o --omf_browse ..\obj\wave.crf --depend ..\obj\wave.d)
 I (..\HARDWARE\LCD\lcd.h)(0x5D538AB0)
 I (..\SYSTEM\sys\sys.h)(0x550F951B)
 I (..\USER\stm32f10x.h)(0x4D783CB4)
@@ -336,7 +336,7 @@ I (..\STM32F10x_FWLib\inc\stm32f10x_usart.h)(0x4D783BB4)
 I (..\STM32F10x_FWLib\inc\stm32f10x_wwdg.h)(0x4D783BB4)
 I (..\STM32F10x_FWLib\inc\misc.h)(0x4D783BB4)
 I (d:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5475F300)
-I (..\HARDWARE\WAVEFORM\wave.h)(0x5D5407AF)
+I (..\HARDWARE\WAVEFORM\wave.h)(0x5D553D21)
 I (..\HARDWARE\PID\pid.h)(0x5D483624)
 I (..\SYSTEM\usart\usart.h)(0x50517A82)
 I (d:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)

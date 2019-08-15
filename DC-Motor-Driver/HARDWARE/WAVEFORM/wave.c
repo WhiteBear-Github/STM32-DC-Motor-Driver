@@ -6,8 +6,13 @@
 #include "pid.h"
 #include "usart.h"
 
-u8 speed[120] = {1};      //各时刻速度纪录数组，每100ms计算一次
+u8 speed[120];      //各时刻速度纪录数组，每100ms计算一次
 
+u8 kpid[5];         //Kp Ki Kd转换为字符串，LCD显示用
+
+
+//显示坐标轴，单位大小划分
+//显示PID参数标志
 void line()
 {
 	u16 i;
@@ -41,11 +46,17 @@ void line()
 	
 	LCD_ShowxNum(245,221,9,1,12,1);
 	
+	LCD_ShowString(25,1,20,20,12,"Kp;");     //显示Kp参数标志
+	LCD_ShowString(85,1,20,20,12,"Ki;");     //显示Ki参数标志
+	LCD_ShowString(145,1,20,20,12,"Kd;");    //显示Kd参数标志
+	
 	LCD_ShowString(270,221,10,20,12,"10");
 	
 	LCD_ShowString(295,221,10,20,12,"11");
 	
 	LCD_ShowString(315,221,10,20,12,"s");
+	
+
 //////////////////////////////////////////////
 ////////////设置纵坐标单位r/s//////////////////
 		for(i=210;i>20;i-=10)
@@ -129,7 +140,7 @@ void wave(void)
 	s8 i;//for循环语句变量
 	
 	V = PID.Rout/334*10;                   //计算实际当前转速
-	LCD_Fill(21,0,320,219,WHITE);          //速度显示区域清空
+	LCD_Fill(21,21,320,219,WHITE);          //速度显示区域清空
 	Aim();                                 //显示当前目标值红线
 
 	for(i=t;i>0;i--)//计算本次速度对应图像
@@ -154,4 +165,46 @@ void wave(void)
 	}
 }
 
+//将PID参数转换成字符串形式，用于LCD显示
+void PID_ToShow(double pid)
+{
+	u8 integer;   //整数
+	u8 dec;//小数
+	
+	if(pid < 0)
+	{
+		kpid[0] = '-';
+		pid = -pid;
+	}
+	else
+		kpid[0] = ' ';
+	
+	integer = (u8)pid;
+	dec = (u8)(pid*10)%10;
+	
+	kpid[1] = integer + '0';
+	kpid[2] = '.';
+	kpid[3] = dec + '0';	
+	kpid[4] = '\0';
+}
 
+void ShowKp(void)
+{
+	PID_ToShow(PID.Kp);
+	LCD_Fill(45,1,65,20,WHITE);
+	LCD_ShowString(45,1,20,20,12, kpid);	
+}
+
+void ShowKi(void)
+{
+	PID_ToShow(PID.Ki);
+	LCD_Fill(105,1,125,20,WHITE);
+	LCD_ShowString(105,1,20,20,12, kpid);	
+}
+
+void ShowKd(void)
+{
+	PID_ToShow(PID.Kd);
+	LCD_Fill(165,1,185,20,WHITE);
+	LCD_ShowString(165,1,20,20,12, kpid);	
+}

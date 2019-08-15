@@ -102,9 +102,9 @@ void EXTI3_IRQHandler(void)
 	{				 
 		switch(j)
 		{
-			case 0 : PID.Kp += 0.1;printf("当前Kp为%f",PID.Kp);break;
-			case 1 : PID.Ki += 0.1;printf("当前Ki为%f",PID.Ki);break;
-			case 2 : PID.Kd += 0.1;printf("当前Kd为%f",PID.Kd);break;
+			case 0 : PID.Kp += 0.1;printf("当前Kp为%f",PID.Kp);ShowKp();break;
+			case 1 : PID.Ki += 0.1;printf("当前Ki为%f",PID.Ki);ShowKi();break;
+			case 2 : PID.Kd += 0.1;printf("当前Kd为%f",PID.Kd);ShowKd();break;
 			case 3 :Clean_Aim(); PID.Rin += 5;Aim();break;
 		}
 	}
@@ -119,9 +119,9 @@ void EXTI4_IRQHandler(void)
 	{
 		switch(j)
 		{
-			case 0 : PID.Kp -= 0.1;printf("当前Kp为%f",PID.Kp);break;
-			case 1 : PID.Ki -= 0.1;printf("当前Ki为%f",PID.Ki);break;
-			case 2 : PID.Kd -= 0.1;printf("当前Kd为%f",PID.Kd);break;
+			case 0 : PID.Kp -= 0.1;printf("当前Kp为%f",PID.Kp);ShowKp();break;
+			case 1 : PID.Ki -= 0.1;printf("当前Ki为%f",PID.Ki);ShowKi();break;
+			case 2 : PID.Kd -= 0.1;printf("当前Kd为%f",PID.Kd);ShowKd();break;
 			case 3 :Clean_Aim(); PID.Rin -= 5;Aim();break;
 		}
 	}		
