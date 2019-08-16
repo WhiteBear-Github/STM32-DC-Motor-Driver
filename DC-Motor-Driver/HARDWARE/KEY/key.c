@@ -6,8 +6,10 @@
 #include "usart.h"
 #include "wave.h"
 #include "lcd.h"
+#include "eeprom.h"
 
  u8 j;      //按键选择指引值
+ 
  
 //按键初始化函数
 void KEY_Init(void) //IO初始化
@@ -85,10 +87,11 @@ void EXTI0_IRQHandler(void)
 	{	
 		switch(i)
 		{
-			case 0 : j = i; i++;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"Kp");break;//当前调整目标为Kp，并在LCD右上角显示
-			case 1 : j = i; i++;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"Ki");break;//当前调整目标为Ki，并在LCD右上角显示
-			case 2 : j = i; i++;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"Kd");break;//当前调整目标为Kd，并在LCD右上角显示
-			case 3 : j = i; i=0;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(315,1,20,20,12,"V");break;//当前调整目标为V，并在LCD右上角显示
+			case 0 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"Kp");break;//当前调整目标为Kp，并在LCD右上角显示
+			case 1 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"Ki");break;//当前调整目标为Ki，并在LCD右上角显示
+			case 2 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"Kd");break;//当前调整目标为Kd，并在LCD右上角显示
+			case 3 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"V");break;//当前调整目标为V，并在LCD右上角显示
+			case 4 : j = i; i=0;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"WR");break;//当前调整目标为EEPROM读写，并在LCD右上角显示
 		}
 	}
 	EXTI_ClearITPendingBit(EXTI_Line0); //清除LINE0上的中断标志位  
@@ -105,8 +108,9 @@ void EXTI3_IRQHandler(void)
 			case 0 : PID.Kp += 0.1;printf("当前Kp为%f",PID.Kp);ShowKp();break;
 			case 1 : PID.Ki += 0.1;printf("当前Ki为%f",PID.Ki);ShowKi();break;
 			case 2 : PID.Kd += 0.1;printf("当前Kd为%f",PID.Kd);ShowKd();break;
-			case 3 :Clean_Aim(); PID.Rin += 5;Aim();break;
-		}
+			case 3 : Clean_Aim(); PID.Rin += 5;Aim();break;
+			case 4 : Write_PID();break;//将画笔调整回蓝色，用于画波形
+		}				
 	}
 	
 	EXTI_ClearITPendingBit(EXTI_Line3);  //清除LINE3上的中断标志位  
@@ -122,7 +126,8 @@ void EXTI4_IRQHandler(void)
 			case 0 : PID.Kp -= 0.1;printf("当前Kp为%f",PID.Kp);ShowKp();break;
 			case 1 : PID.Ki -= 0.1;printf("当前Ki为%f",PID.Ki);ShowKi();break;
 			case 2 : PID.Kd -= 0.1;printf("当前Kd为%f",PID.Kd);ShowKd();break;
-			case 3 :Clean_Aim(); PID.Rin -= 5;Aim();break;
+			case 3 : Clean_Aim(); PID.Rin -= 5;Aim();break;
+			case 4 : Read_PID();break;//在LCD右上角显示“ROK”标志
 		}
 	}		
 	

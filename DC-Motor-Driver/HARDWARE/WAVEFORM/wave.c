@@ -66,8 +66,8 @@ void line()
 	LCD_ShowxNum(10,210,5,1,12,1);
 	
 	LCD_ShowString(5,200,10,20,12,"10");
-	
-	LCD_ShowString(5,190,10,20,12,"15");
+ 	
+ 	LCD_ShowString(5,190,10,20,12,"15");
 	
 	LCD_ShowString(5,180,10,20,12,"20");
 	
@@ -166,6 +166,10 @@ void wave(void)
 }
 
 //将PID参数转换成字符串形式，用于LCD显示
+//参数大小不超过两位数
+                         //***************************************************************//
+//****************************存在BUG：当数据转换到0时会出现0和-0两次，造成显示数据偏差0.1************************//
+                         //***************************************************************//
 void PID_ToShow(double pid)
 {
 	u8 integer;   //整数
@@ -188,6 +192,7 @@ void PID_ToShow(double pid)
 	kpid[4] = '\0';
 }
 
+//显示当前Kp参数值
 void ShowKp(void)
 {
 	PID_ToShow(PID.Kp);
@@ -195,6 +200,7 @@ void ShowKp(void)
 	LCD_ShowString(45,1,20,20,12, kpid);	
 }
 
+//显示当前Ki参数值
 void ShowKi(void)
 {
 	PID_ToShow(PID.Ki);
@@ -202,6 +208,7 @@ void ShowKi(void)
 	LCD_ShowString(105,1,20,20,12, kpid);	
 }
 
+//显示当前Kd参数值
 void ShowKd(void)
 {
 	PID_ToShow(PID.Kd);

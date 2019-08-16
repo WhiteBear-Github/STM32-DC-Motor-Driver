@@ -27,4 +27,8 @@ typedef struct
 extern PID_DEFINE PID;
 extern u8 t;  //计算次数纪录变量
 
+extern u8 kp[5];  //存放Kp数组
+extern u8 ki[5];  //存放Ki数组
+extern u8 kd[5];  //存放Kd数组
+
 #endif

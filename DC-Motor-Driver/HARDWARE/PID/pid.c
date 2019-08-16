@@ -7,8 +7,10 @@
 PID_DEFINE  PID;
 
 u8 start = 0;   //电机开始工作标志位
-
 u8 t = 0;  //TFLCD上显示t个分点
+u8 kp[5];  //存放Kp数组
+u8 ki[5];  //存放Ki数组
+u8 kd[5];  //存放Kd数组
 
 //arr：自动重装值 固定为 (999+1) = 1000，pwm周期为1000/10000 = 100ms
 //psc：时钟预分频数  固定为（7199+1）=7200，频率为7200/72000000 = 10KHZ
@@ -46,9 +48,9 @@ void PID_Init()
 	PID.Ek = 0;
 	PID.Ek1 = 0;
 	
-	PID.Kp = 2.8;  
-	PID.Ki = 2.8;
-	PID.Kd = -0.8;
+	PID.Kp = 2.0;  
+	PID.Ki = 2.0;
+	PID.Kd = 0.3;
 	
 	PID.OUT = 0;
 	
@@ -71,12 +73,12 @@ void TIM4_IRQHandler ()
 				t = 119;   //屏幕最多显示最近12秒的速度
 			}					
 			PID.Rout = count_A+count_AA*65535;           //实际每0.1s输出圈数
-			wave();
+			wave();//显示波形
 			error = PID.Rin*334/10 - PID.Rout;           //0.1s的误差圈数
 			count_AA = 0;
 			count_A = 0;
 			PID_Calculate(error);
-			if(PID.OUTR>30 ||PID.OUTR<-30)
+			if(PID.OUTR>30 ||PID.OUTR<-30)      //如果增量小于一定值输出不改变，减小波动
 			{
 				PID.OUT += PID.OUTR;
 			}

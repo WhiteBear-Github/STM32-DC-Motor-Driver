@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\PWM;..\HARDWARE\PID;..\HARDWARE\ENCODER;..\HARDWARE\LCD;..\HARDWARE\WAVEFORM</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\PWM;..\HARDWARE\PID;..\HARDWARE\ENCODER;..\HARDWARE\LCD;..\HARDWARE\WAVEFORM;..\HARDWARE\EEPROM</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -462,6 +462,16 @@
               <FileName>wave.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\WAVEFORM\wave.c</FilePath>
+            </File>
+            <File>
+              <FileName>eeprom.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\EEPROM\eeprom.c</FilePath>
+            </File>
+            <File>
+              <FileName>iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\EEPROM\iic.c</FilePath>
             </File>
           </Files>
         </Group>
