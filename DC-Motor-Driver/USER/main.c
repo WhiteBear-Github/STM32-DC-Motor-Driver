@@ -18,13 +18,15 @@
 	delay_init();             //延时函数初始化
 	uart_init(115200);        //串口波特率设置
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);     //中断优先级级分组2
+	
 	LCD_Init();                //初始化LCD，横屏显示，底色为白色
 	line();                    //画LCD坐标轴
 	POINT_COLOR = 0x001F;      //LCD画笔颜色调整为蓝色
 	sprintf((char*)lcd_id,"LCD ID:%04X",lcddev.id);//将LCD ID打印到lcd_id数组。 
 	PID_Init();                 //pid参数初始化
-	
 	Aim();                    //画目标红线
+	LCD_ShowString(310,1,20,20,12,"Kp");//开始时按键调整目标为Kp，并在LCD右上角显示
+	
 	TIM5_PWM_Init();          //PWM输出初始化
 	Encoder_A_Init();         //编码器A初始化
 

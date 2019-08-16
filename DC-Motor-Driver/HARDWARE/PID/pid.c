@@ -41,13 +41,17 @@ void TIM4_CNT_Init(void)
 //PID变量初始化
 void PID_Init()
 {
-	PID.Kp = 2.5;
+	PID.Rin = 45;
+	
 	PID.Ek = 0;
 	PID.Ek1 = 0;
-	PID.Rin = 45;  
+	
+	PID.Kp = 2.8;  
 	PID.Ki = 2.8;
 	PID.Kd = -0.8;
+	
 	PID.OUT = 0;
+	
 	ShowKp();
 	ShowKi();
 	ShowKd();

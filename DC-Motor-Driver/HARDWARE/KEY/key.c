@@ -85,10 +85,10 @@ void EXTI0_IRQHandler(void)
 	{	
 		switch(i)
 		{
-			case 0 : j = i; i++;break;
-			case 1 : j = i; i++;break;
-			case 2 : j = i; i++;break;
-			case 3 : j = i; i=0;break;
+			case 0 : j = i; i++;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"Kp");break;//当前调整目标为Kp，并在LCD右上角显示
+			case 1 : j = i; i++;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"Ki");break;//当前调整目标为Ki，并在LCD右上角显示
+			case 2 : j = i; i++;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"Kd");break;//当前调整目标为Kd，并在LCD右上角显示
+			case 3 : j = i; i=0;LCD_Fill(300,1,320,20,WHITE);LCD_ShowString(315,1,20,20,12,"V");break;//当前调整目标为V，并在LCD右上角显示
 		}
 	}
 	EXTI_ClearITPendingBit(EXTI_Line0); //清除LINE0上的中断标志位  
