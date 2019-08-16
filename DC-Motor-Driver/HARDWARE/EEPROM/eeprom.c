@@ -11,6 +11,7 @@
 24C02的255位用作标志位，不要在此位写入其他数据，特殊情况另做处理
 *************************************************************/
 
+u8 aimv = 0;
 
 //初始化IIC接口
 void AT24C02_Init(void)
@@ -200,6 +201,13 @@ void Write_PID()
 	AT24C02_Write(0,kp,5); //将PID参数写入24C02
 	AT24C02_Write(6,ki,5);
 	AT24C02_Write(11,kd,5); 
+	if(PID.Rin == 100)         //向24C02写入目标速度
+	{
+		AT24C02_WriteLenByte(16,PID.Rin,3);
+		aimv = 1;
+	}
+	else
+		AT24C02_WriteLenByte(16,PID.Rin,2);
 	if(ok)  //在LCD右上角显示红蓝两色“WOK”标志
 	{
 		POINT_COLOR = RED;
@@ -237,7 +245,15 @@ void Read_PID()
 	{
 		PID.Kd = -PID.Kd;
 	}
+	if(aimv)     //读取目标速度
+	{
+		PID.Rin = AT24C02_ReadLenByte(16,3);
+		aimv = 0;
+	}
+	else
+		PID.Rin = AT24C02_ReadLenByte(16,2);
 	
+	Aim();//目标红线显示
 	printf("当前Kp为%f",PID.Kp);  //在串口和LCD上显示参数值
 	printf("当前Ki为%f",PID.Ki);
 	printf("当前Kd为%f",PID.Kd);
