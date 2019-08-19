@@ -6,7 +6,7 @@
 #include "pid.h"
 #include "usart.h"
 
-u8 speed[120];      //各时刻速度纪录数组，每100ms计算一次
+u8 speed[120];      //各时刻速度/角度纪录数组，每100ms计算一次
 
 u8 kpid[5];         //Kp Ki Kd转换为字符串，LCD显示用
 
@@ -49,7 +49,10 @@ void line()
 	LCD_ShowString(25,1,20,20,12,"Kp;");     //显示Kp参数标志
 	LCD_ShowString(85,1,20,20,12,"Ki;");     //显示Ki参数标志
 	LCD_ShowString(145,1,20,20,12,"Kd;");    //显示Kd参数标志
-	
+	if(mode)
+		LCD_ShowString(205,1,20,20,12,"AN:");  //显示设定的角度标志
+	else
+		LCD_ShowString(205,1,20,20,12," V:");  //显示设定的速度标志
 	LCD_ShowString(270,221,10,20,12,"10");
 	
 	LCD_ShowString(295,221,10,20,12,"11");
@@ -58,59 +61,109 @@ void line()
 	
 
 //////////////////////////////////////////////
-////////////设置纵坐标单位r/s//////////////////
+///////////设置纵坐标单位r/或度////////////////
+	
 		for(i=210;i>20;i-=10)
-	{
-		LCD_Fast_DrawPoint(20,i,YELLOW);
+	{	
+			LCD_Fast_DrawPoint(20,i,YELLOW);
 	}
-	LCD_ShowxNum(10,210,5,1,12,1);
+	if(!mode)
+	{
+		LCD_ShowxNum(10,210,5,1,12,1);
 	
-	LCD_ShowString(5,200,10,20,12,"10");
+		LCD_ShowString(5,200,10,20,12,"10");
  	
- 	LCD_ShowString(5,190,10,20,12,"15");
+		LCD_ShowString(5,190,10,20,12,"15");
 	
-	LCD_ShowString(5,180,10,20,12,"20");
+		LCD_ShowString(5,180,10,20,12,"20");
 	
-	LCD_ShowString(5,170,10,20,12,"25");
+		LCD_ShowString(5,170,10,20,12,"25");
 	
-	LCD_ShowString(5,160,10,20,12,"30");
+		LCD_ShowString(5,160,10,20,12,"30");
 	
-	LCD_ShowString(5,150,10,20,12,"35");
+		LCD_ShowString(5,150,10,20,12,"35");
 	
-	LCD_ShowString(5,140,10,20,12,"40");
+		LCD_ShowString(5,140,10,20,12,"40");
 	
-	LCD_ShowString(5,130,10,20,12,"45");
+		LCD_ShowString(5,130,10,20,12,"45");
 	
-	LCD_ShowString(5,120,10,20,12,"50");
+		LCD_ShowString(5,120,10,20,12,"50");
 	
-	LCD_ShowString(5,110,10,20,12,"55");
+		LCD_ShowString(5,110,10,20,12,"55");
 	
-	LCD_ShowString(5,100,10,20,12,"60");
+		LCD_ShowString(5,100,10,20,12,"60");
 	
-	LCD_ShowString(5,90,10,20,12,"65");
+		LCD_ShowString(5,90,10,20,12,"65");
 	
-	LCD_ShowString(5,80,10,20,12,"70");
+		LCD_ShowString(5,80,10,20,12,"70");
 	
-	LCD_ShowString(5,70,10,20,12,"75");
+		LCD_ShowString(5,70,10,20,12,"75");
 	
-	LCD_ShowString(5,60,10,20,12,"80");
+		LCD_ShowString(5,60,10,20,12,"80");
 	
-	LCD_ShowString(5,50,10,20,12,"85");
+		LCD_ShowString(5,50,10,20,12,"85");
 
-	LCD_ShowString(5,40,10,20,12,"90");
+		LCD_ShowString(5,40,10,20,12,"90");
 
-	LCD_ShowString(5,30,10,20,12,"95");
+		LCD_ShowString(5,30,10,20,12,"95");
 
-	LCD_ShowString(0,20,15,20,12,"100");
+		LCD_ShowString(0,20,15,20,12,"100");
 	
-	LCD_ShowString(0,1,20,20,12,"r/s");
+		LCD_ShowString(0,1,20,20,12,"r/s");
+	}
+	else
+	{
+		LCD_ShowString(5,210,15,20,12,"80");
+	
+		LCD_ShowString(5,200,15,20,12,"90");
+ 	
+		LCD_ShowString(0,190,15,20,12,"100");
+	
+		LCD_ShowString(0,180,15,20,12,"110");
+	
+		LCD_ShowString(0,170,15,20,12,"120");
+	
+		LCD_ShowString(0,160,15,20,12,"130");
+	
+		LCD_ShowString(0,150,15,20,12,"140");
+	
+		LCD_ShowString(0,140,15,20,12,"150");
+	
+		LCD_ShowString(0,130,15,20,12,"160");
+	
+		LCD_ShowString(0,120,15,20,12,"170");
+	
+		LCD_ShowString(0,110,15,20,12,"180");
+	
+		LCD_ShowString(0,100,15,20,12,"190");
+	
+		LCD_ShowString(0,90,15,20,12,"200");
+	
+		LCD_ShowString(0,80,15,20,12,"210");
+	
+		LCD_ShowString(0,70,15,20,12,"220");
+	
+		LCD_ShowString(0,60,15,20,12,"230");
+	
+		LCD_ShowString(0,50,15,20,12,"240");
+
+		LCD_ShowString(0,40,15,20,12,"250");
+
+		LCD_ShowString(0,30,15,20,12,"260");
+
+		LCD_ShowString(0,20,15,20,12,"270");
+	}
+	
 }
 
 //目标值红线显示
 void Aim(void)
 {
 	u8 real;
-	real = 240-(20+PID.Rin*2);
+	if(!mode)
+		real = 240-(20+PID.Rin*2);
+	else
+		real = 240-(20+PID.Rin-70);
 	if(real<=20)
 		real = 20;
 	if(real>220)
@@ -123,7 +176,10 @@ void Aim(void)
 void Clean_Aim()
 {
 	u8 real;
-	real = 240-(20+PID.Rin*2);
+	if(!mode)
+		real = 240-(20+PID.Rin*2);
+	else
+		real = 240-(20+PID.Rin-70);
 	if(real<=20)                              //目标速度最低设定值为0 r/s
 		real = 20;
 	if(real>220)                              //目标速度最高设定值为100 r/s
@@ -136,31 +192,60 @@ void Clean_Aim()
 //波形显示
 void wave(void)
 {
-	u8 V;//当前转速
+	u8 V_AN;//当前转速/角度
 	s8 i;//for循环语句变量
+	if(!mode)
+	{
+		V_AN = PID.Rout/334*10;        //计算实际当前转速（取整数，舍去了小数，以便于显示）
+	}
+	else
+	{
+		V_AN = angle_sum;              //计算当前实际转过角度	
+	}
 	
-	V = PID.Rout/334*10;                   //计算实际当前转速
-	LCD_Fill(21,21,320,219,WHITE);          //速度显示区域清空
+	LCD_Fill(21,21,320,219,WHITE);          //波形显示区域清空
 	Aim();                                 //显示当前目标值红线
 
-	for(i=t;i>0;i--)//计算本次速度对应图像
+	for(i=t;i>0;i--)//计算本次波形对应图像
 	{
-		if(speed[i-1]==0)
-		speed[i-1] = 1;        //如果转速为0，显示时向上移动一个分辨率，便于清屏处理
+		if(!mode)
+		{
+			if(speed[i-1]==0)
+			{
+				speed[i-1] = 1;        //如果转速为0，显示时向上移动一个分辨率，便于清屏处理
+			}
+		}
+		else
+		{
+			if(speed[i-1]==70)
+			{
+				speed[i-1] = 71;        //如果转速为0，显示时向上移动一个分辨率，便于清屏处理
+			}
+		}
 		speed[i] = speed[i-1];  //将上次速度向后推移一位
 	}
 	
-	speed[0] = V;
+	speed[0] = V_AN;
 	
 	for(i=t;i>=0;i--) //显示本次对应图像
 	{
 		if(i>1)              //丢弃计算的第一个点
 		{
-			LCD_DrawLine(20+(i*2.5),240-(20+2*speed[i]),20+((i-1)*2.5),240-(20+2*speed[i-1]));
+			
+			if(!mode)
+				LCD_DrawLine(20+(i*2.5),240-(20+2*speed[i]),20+((i-1)*2.5),240-(20+2*speed[i-1]));
+			else
+			{
+				LCD_DrawLine(20+(i*2.5),240-(20+speed[i]-70),20+((i-1)*2.5),240-(20+speed[i-1]-70));
+			}
+			
 		}	
 		else if(i==1)
 		{
-			LCD_DrawLine(20+(i*2.5),240-(20+2*speed[i]),21,240-(20+2*speed[i-1])); //最新一个计算数值显示向右偏差1个像素点，便于清屏处理
+			if(!mode)
+				LCD_DrawLine(20+(i*2.5),240-(20+2*speed[i]),21,240-(20+2*speed[i-1])); //最新一个计算数值显示向右偏差1个像素点，便于清屏处理
+			else
+				LCD_DrawLine(20+(i*2.5),240-(20+speed[i]-70),21,240-(20+speed[i-1]-70)); //最新一个计算数值显示向右偏差1个像素点，便于清屏处理
 		}
 	}
 }
@@ -196,7 +281,7 @@ void PID_ToShow(double pid)
 void ShowKp(void)
 {
 	PID_ToShow(PID.Kp);
-	LCD_Fill(45,1,65,20,WHITE);
+	LCD_Fill(45,1,65,19,WHITE);
 	LCD_ShowString(45,1,20,20,12, kpid);	
 }
 
@@ -204,7 +289,7 @@ void ShowKp(void)
 void ShowKi(void)
 {
 	PID_ToShow(PID.Ki);
-	LCD_Fill(105,1,125,20,WHITE);
+	LCD_Fill(105,1,125,19,WHITE);
 	LCD_ShowString(105,1,20,20,12, kpid);	
 }
 
@@ -212,6 +297,25 @@ void ShowKi(void)
 void ShowKd(void)
 {
 	PID_ToShow(PID.Kd);
-	LCD_Fill(165,1,185,20,WHITE);
+	LCD_Fill(165,1,185,19,WHITE);
 	LCD_ShowString(165,1,20,20,12, kpid);	
+}
+
+//显示当前设定速度/角度
+void ShowAN_V(void)
+{
+	u8 AN_V[4];
+	LCD_Fill(225,1,245,19,WHITE);
+	if((u8)PID.Rin/100%10 == 0)
+	{
+		AN_V[0] = ' ';
+	}
+	else
+	{
+		AN_V[0] = (u8)PID.Rin/100%10 + '0';
+	}
+	AN_V[1] = (u8)PID.Rin/10%10 + '0';
+	AN_V[2] = (u8)PID.Rin%10 + '0';
+	AN_V[3] = '\0';
+	LCD_ShowString(225,1,20,20,12, AN_V);		
 }

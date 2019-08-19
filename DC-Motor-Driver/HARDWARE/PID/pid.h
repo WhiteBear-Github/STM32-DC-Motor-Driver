@@ -31,4 +31,7 @@ extern u8 kp[5];  //存放Kp数组
 extern u8 ki[5];  //存放Ki数组
 extern u8 kd[5];  //存放Kd数组
 
+extern u8 mode;  //转速、角度模式选择
+extern double angle_sum ;  //当前已转过的总角度
+
 #endif

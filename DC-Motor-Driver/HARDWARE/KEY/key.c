@@ -7,6 +7,8 @@
 #include "wave.h"
 #include "lcd.h"
 #include "eeprom.h"
+#include "pwm.h"
+#include "encoder.h"
 
  u8 j;      //按键选择指引值
  
@@ -78,24 +80,80 @@ void KEY_EXTI_Init()
  
 }
 
+//角度模式初始化
+void Angle_Init(void)
+{
+	PID.Ek = 0;
+	PID.Ek1 = 0;
+	
+	PID.Kp = 2.2;
+	PID.Ki = 2.0;
+	PID.Kd = 1.0;
+	
+	PID.Rin = 180;
+	PID.Rout = 0;
+	PID.OUT = 0;
+	PID.OUTR = 0;
+	LCD_Clear(WHITE);
+	Aim();
+	LCD_ShowString(305,1,20,20,12,"MO");//开始时按键调整目标为MO，并在LCD右上角显示
+	POINT_COLOR = BLACK;
+	line();
+	POINT_COLOR = BLUE;
+	ShowKp();
+	ShowKi();
+	ShowKd();
+	ShowAN_V();
+
+}
+
+//速度模式初始化
+void Speed_Init(void)
+{
+	PID.Ek = 0;
+	PID.Ek1 = 0;
+	
+	PID.Kp = 2.8;
+	PID.Ki = 2.5;
+	PID.Kd = 0.3;
+	
+	PID.Rin = 45;
+	PID.Rout = 0;
+	PID.OUT = 0;
+	PID.OUTR = 0;
+	LCD_Clear(WHITE);
+	Aim();
+	LCD_ShowString(305,1,10,20,12,"MO");//开始时按键调整目标为MO，并在LCD右上角显示
+	POINT_COLOR = BLACK;
+	line();
+	POINT_COLOR = BLUE;
+	ShowKp();
+	ShowKi();
+	ShowKd();
+	ShowAN_V();
+}
+
 //外部中断0服务程序 
 void EXTI0_IRQHandler(void)
 {
 	static u8 i = 0;
 	delay_ms(10);//消抖
-	if(WK_UP==1)	 	 //WK_UP按键
+	if(WK_UP==1)//WK_UP按键
 	{	
 		switch(i)
 		{
 			case 0 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"Kp");break;//当前调整目标为Kp，并在LCD右上角显示
 			case 1 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"Ki");break;//当前调整目标为Ki，并在LCD右上角显示
 			case 2 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"Kd");break;//当前调整目标为Kd，并在LCD右上角显示
-			case 3 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(310,1,20,20,12,"V");break;//当前调整目标为V，并在LCD右上角显示
-			case 4 : j = i; i=0;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"WR");break;//当前调整目标为EEPROM读写，并在LCD右上角显示
+			case 3 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);if(!mode){LCD_ShowString(310,1,20,20,12,"V");}else{LCD_ShowString(305,1,20,20,12,"AN");}break;//当前调整目标为V/AN，并在LCD右上角显示
+			case 4 : j = i; i++;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"MO");break;//当前调整目标为模式mode，并在LCD右上角显示	
+			case 5 : j = i; i=0;LCD_Fill(305,1,320,20,WHITE);LCD_ShowString(305,1,20,20,12,"WR");break;//当前调整目标为EEPROM读写，并在LCD右上角显示
+			
 		}
 	}
 	EXTI_ClearITPendingBit(EXTI_Line0); //清除LINE0上的中断标志位  
 }
+
 
 //外部中断3服务程序
 void EXTI3_IRQHandler(void)
@@ -105,11 +163,12 @@ void EXTI3_IRQHandler(void)
 	{				 
 		switch(j)
 		{
-			case 0 : PID.Kp += 0.1;printf("当前Kp为%f",PID.Kp);ShowKp();break;
-			case 1 : PID.Ki += 0.1;printf("当前Ki为%f",PID.Ki);ShowKi();break;
-			case 2 : PID.Kd += 0.1;printf("当前Kd为%f",PID.Kd);ShowKd();break;
-			case 3 : Clean_Aim(); PID.Rin += 5;Aim();break;
-			case 4 : Write_PID();break;//将画笔调整回蓝色，用于画波形
+			case 0 : PID.Kp += 0.1;Check();printf("当前Kp为%f",PID.Kp);ShowKp();break;
+			case 1 : PID.Ki += 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
+			case 2 : PID.Kd += 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
+			case 3 : Clean_Aim();if(!mode){PID.Rin += 5;}else{PID.Rin += 10;count_A_TEMP=0;}Check();Aim();ShowAN_V();break;
+			case 4 : mode = 1;Angle_Init();count_A_TEMP=0;PWM(1,0);t=0;delay_ms(1000);break;//角度模式
+			case 5 : Write_PID();break;//将画笔调整回蓝色，用于画波形
 		}				
 	}
 	
@@ -123,14 +182,27 @@ void EXTI4_IRQHandler(void)
 	{
 		switch(j)
 		{
-			case 0 : PID.Kp -= 0.1;printf("当前Kp为%f",PID.Kp);ShowKp();break;
-			case 1 : PID.Ki -= 0.1;printf("当前Ki为%f",PID.Ki);ShowKi();break;
-			case 2 : PID.Kd -= 0.1;printf("当前Kd为%f",PID.Kd);ShowKd();break;
-			case 3 : Clean_Aim(); PID.Rin -= 5;Aim();break;
-			case 4 : Read_PID();break;//在LCD右上角显示“ROK”标志
+			case 0 : PID.Kp -= 0.1;Check();printf("当前Kp为%f",PID.Kp);ShowKp();break;
+			case 1 : PID.Ki -= 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
+			case 2 : PID.Kd -= 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
+			case 3 : Clean_Aim();if(!mode){PID.Rin -= 5;}else{PID.Rin -= 10;count_A_TEMP=0;}Check();Aim();ShowAN_V();break;
+			case 4 : mode = 0;Speed_Init();count_A_TEMP=0;PWM(1,0);t=0;delay_ms(1000);break;//速度模式
+			case 5 : Read_PID();break;//在LCD右上角显示“ROK”标志
 		}
 	}		
 	
 	EXTI_ClearITPendingBit(EXTI_Line4);  //清除LINE4上的中断标志位  
 }
 
+//按键操纵变量有效性判断
+void Check(void)
+{
+	switch(j)
+	{
+		case 0: if(PID.Kp >= 9.9) PID.Kp = 9.9;else if(PID.Kp <= -9.9)PID.Kp = -9.9;
+		case 1: if(PID.Ki >= 9.9)PID.Ki = 9.9;else if(PID.Ki <= -9.9)PID.Ki = -9.9;
+		case 2: if(PID.Kd >= 9.9 )PID.Kd = 9.9;else if(PID.Kd <= -9.9)PID.Kd = -9.9;
+		case 3: if(mode){if(PID.Rin > 270)PID.Rin = 270.;else if(PID.Rin<=90)PID.Rin = 90;}
+						else{if(PID.Rin > 100)PID.Rin = 100;else if(PID.Rin<=1)PID.Rin = 1;}
+	}
+}

@@ -1,7 +1,12 @@
 #include "encoder.h"
+#include "sys.h"
+#include "pid.h"
 
 u16 count_A = 0;         //A相捕获通道捕获的上升沿
 u16 count_AA = 0;        //A相捕获通道捕获上升沿达到65535溢出次数
+u16 count_A_TEMP = 0;        //A相编码器数据，暂存值，用于存储计算转过角度
+
+
 
 u16 count_B = 0;         //B相捕获通道捕获的上升沿
 u16 count_BB = 0;        //B相捕获通道捕获上升沿达到65535溢出次数
@@ -58,6 +63,7 @@ void Encoder_A_Init()
 //编码器B相，TIM3 通道2，输入捕获，初始化
 //arr：自动重装值 固定为 (299+1) = 300，pwm周期为300/10000 = 30ms
 //psc：时钟预分频数  固定为（7199+1）=7200，频率为7200/72000000 = 10KHZ
+/***********该段程序未启用************/
 void Encoder_B_Init()
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -87,7 +93,7 @@ void Encoder_B_Init()
 	TIM3_ICInitStructure.TIM_Channel = TIM_Channel_2; // 选择CH2为输入通道
   TIM3_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	//上升沿捕获
   TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //直接映射到CH2上
-  TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	 //配置输入分频,不分频，即每个上升沿记录1次 
+  TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	 //配置输入分频,2分频，即每2个上升沿记录1次 
   TIM3_ICInitStructure.TIM_ICFilter = 0x00;//IC1F=0000 配置输入滤波器 不滤波
   TIM_ICInit(TIM3, &TIM3_ICInitStructure);
 	
@@ -104,21 +110,23 @@ void Encoder_B_Init()
 }
 
 
-//定时器5中断服务程序	 
+//定时器3中断服务程序	 
 void TIM3_IRQHandler()
-{
+{	
 	if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET)
 	{
-
-		count_A++;
-		if(count_A == 65535)
+		count_A ++;
+		if(mode)
+			count_A_TEMP ++;
+		if(count_A == 65535 )
 		{
 			count_AA++;
 			count_A = 0;
 		}
 		TIM_ClearITPendingBit(TIM3,TIM_IT_CC1);//清除通道1捕获中断位
 	}
-	else if (TIM_GetITStatus(TIM3,TIM_IT_CC2) != RESET)
+/***********该段程序未启用************/
+	else if (TIM_GetITStatus(TIM3,TIM_IT_CC2) != RESET)   
 	{
 		count_B++;
 		if(count_B == 65535)
@@ -126,6 +134,7 @@ void TIM3_IRQHandler()
 			count_BB++;
 			count_B = 0;
 		}
+
 		TIM_ClearITPendingBit(TIM3, TIM_IT_CC2); //清除通道2捕获中断标志位
 	}
 }

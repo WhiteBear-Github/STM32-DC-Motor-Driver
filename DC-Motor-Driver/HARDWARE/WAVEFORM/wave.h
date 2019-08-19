@@ -11,5 +11,6 @@ void PID_ToShow(double pid);//将PID参数转换成字符串形式，用于LCD显示
 void ShowKp(void);//在LCD上显示参数Kp
 void ShowKi(void);//在LCD上显示参数Ki
 void ShowKd(void);//在LCD上显示参数Kd
+void ShowAN_V(void);//在LCD上显示速度或角度
 
 #endif

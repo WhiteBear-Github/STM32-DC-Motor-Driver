@@ -30,6 +30,7 @@
 	
 	TIM5_PWM_Init();          //PWM输出初始化
 	Encoder_A_Init();         //编码器A初始化
+
 	AT24C02_Init();						//IIC初始化 
 	KEY_EXTI_Init();          //按键外部中断初始化
 	

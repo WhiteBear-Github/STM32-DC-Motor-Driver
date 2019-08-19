@@ -26,7 +26,7 @@ void TIM5_PWM_Init()
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
 	TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure); //根据TIM_TimeBaseInitStruct中指定的参数初始化TIMx的时间基数单位
 	
-	//初始化TIM5 通道2 PWM模式	 
+	//初始化TIM5 通道2、通道3 PWM模式	 
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //选择定时器模式:TIM脉冲宽度调制模式1，小于CCR2为有效电平
  	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //比较输出使能
 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //输出极性:TIM输出比较极性高
@@ -40,14 +40,14 @@ void TIM5_PWM_Init()
 }
 
 //改变TIM5 通道2 上PWM占空比
-//参数 pwma：寄存器CCR2的值，取值范围0~9999,当取9999是电机占空比为0
+//参数 pwma：寄存器CCR2的值，取值范围0~9999,当取9999是电机占空比为100
 void PWMA_Change(double pwma)
 {
 	TIM_SetCompare2(TIM5,pwma);
 }
 
-//改变TIM5 通道2 上PWM占空比
-//参数 pwmb：寄存器CCR2的值，取值范围0~9999 ,当取9999是电机占空比为0
+//改变TIM5 通道3 上PWM占空比
+//参数 pwmb：寄存器CCR2的值，取值范围0~9999 ,当取9999是电机占空比为100
 void PWMB_Change(double pwmb)
 {
 	TIM_SetCompare3(TIM5,pwmb);
@@ -55,17 +55,18 @@ void PWMB_Change(double pwmb)
 
 
 //电机操控函数
-//dir：表示方向 ，0：正转，1：翻转
+//dir：表示方向 ，0：正转（背面观看电机顺时针转动），1：反转
 void PWM(u8 dir ,double pwm)
 {
-	if(dir)
+	if(!dir)              
 	{
-		PWMB_Change(0);
-		PWMA_Change(pwm);
+		PWMB_Change(0);    //通道3输出电压为0
+		PWMA_Change(pwm);  //通道2输出PWM
 	}
-	else 
+	else
 	{
-		PWMA_Change(0);
-		PWMB_Change(pwm);
+		PWMA_Change(0);    //通道2输出电压为0
+		PWMB_Change(pwm);  //通道3输出PWM
 	}
+
 }
