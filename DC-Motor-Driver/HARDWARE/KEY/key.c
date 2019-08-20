@@ -86,8 +86,8 @@ void Angle_Init(void)
 	PID.Ek = 0;
 	PID.Ek1 = 0;
 	
-	PID.Kp = 2.2;
-	PID.Ki = 2.0;
+	PID.Kp = 1.0;
+	PID.Ki = 3.2;
 	PID.Kd = 1.0;
 	
 	PID.Rin = 180;
@@ -113,7 +113,7 @@ void Speed_Init(void)
 	PID.Ek = 0;
 	PID.Ek1 = 0;
 	
-	PID.Kp = 2.8;
+	PID.Kp = 1.5;
 	PID.Ki = 2.5;
 	PID.Kd = 0.3;
 	
@@ -167,7 +167,7 @@ void EXTI3_IRQHandler(void)
 			case 1 : PID.Ki += 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
 			case 2 : PID.Kd += 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
 			case 3 : Clean_Aim();if(!mode){PID.Rin += 5;}else{PID.Rin += 10;count_A_TEMP=0;}Check();Aim();ShowAN_V();break;
-			case 4 : mode = 1;Angle_Init();count_A_TEMP=0;PWM(1,0);t=0;delay_ms(1000);break;//角度模式
+			case 4 : mode = 1;Angle_Init();count_A_TEMP=0;PWM(1,0);delay_ms(1000);t = 0;angle_sum=0;break;//角度模式
 			case 5 : Write_PID();break;//将画笔调整回蓝色，用于画波形
 		}				
 	}
@@ -186,7 +186,7 @@ void EXTI4_IRQHandler(void)
 			case 1 : PID.Ki -= 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
 			case 2 : PID.Kd -= 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
 			case 3 : Clean_Aim();if(!mode){PID.Rin -= 5;}else{PID.Rin -= 10;count_A_TEMP=0;}Check();Aim();ShowAN_V();break;
-			case 4 : mode = 0;Speed_Init();count_A_TEMP=0;PWM(1,0);t=0;delay_ms(1000);break;//速度模式
+			case 4 : mode = 0;Speed_Init();count_A_TEMP=0;PWM(1,0);delay_ms(1000);t = 0;PID.Rout=0;break;//速度模式
 			case 5 : Read_PID();break;//在LCD右上角显示“ROK”标志
 		}
 	}		
@@ -202,7 +202,7 @@ void Check(void)
 		case 0: if(PID.Kp >= 9.9) PID.Kp = 9.9;else if(PID.Kp <= -9.9)PID.Kp = -9.9;
 		case 1: if(PID.Ki >= 9.9)PID.Ki = 9.9;else if(PID.Ki <= -9.9)PID.Ki = -9.9;
 		case 2: if(PID.Kd >= 9.9 )PID.Kd = 9.9;else if(PID.Kd <= -9.9)PID.Kd = -9.9;
-		case 3: if(mode){if(PID.Rin > 270)PID.Rin = 270.;else if(PID.Rin<=90)PID.Rin = 90;}
+		case 3: if(mode){if(PID.Rin > 260)PID.Rin = 260.;else if(PID.Rin<=90)PID.Rin = 90;}
 						else{if(PID.Rin > 100)PID.Rin = 100;else if(PID.Rin<=1)PID.Rin = 1;}
 	}
 }

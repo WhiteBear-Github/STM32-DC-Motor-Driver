@@ -56,7 +56,7 @@ void PID_Init()
 	PID.Ek = 0;
 	PID.Ek1 = 0;
 	
-	PID.Kp = 2.8;  
+	PID.Kp = 1.5;  
 	PID.Ki = 2.5;
 	PID.Kd = 0.3;
 	
@@ -88,13 +88,14 @@ void TIM4_IRQHandler ()
 				count_AA = 0;
 				count_A = 0;
 				angle_sum = count_A_TEMP/334.0*360; //实际已经转过角度  
-				if(angle_sum > 80) //角度转动超过80度才在LCD上显示
+				if(angle_sum > 70) //角度转动超过70度才在LCD上显示
 				{
 					t += 1;
 					if(t>=119)
 					{
 						t = 119;   //屏幕最多显示最近12秒的速度
 					}
+					
 					wave();
 				}
 				PID_Calculate(error);

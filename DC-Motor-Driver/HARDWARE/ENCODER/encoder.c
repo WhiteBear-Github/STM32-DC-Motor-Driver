@@ -117,7 +117,9 @@ void TIM3_IRQHandler()
 	{
 		count_A ++;
 		if(mode)
+		{
 			count_A_TEMP ++;
+		}	
 		if(count_A == 65535 )
 		{
 			count_AA++;
