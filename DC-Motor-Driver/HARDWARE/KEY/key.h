@@ -22,6 +22,7 @@ void KEY_EXTI_Init(void);//按键外部中断函数
 void Angle_Init(void);//角度模式初始化
 void Speed_Init(void);//速度模式初始化
 void Check(void);//按键操纵变量有效性判断
+void Stop_Init(void);//电机停止，PID清0初始化
 
 #endif
 

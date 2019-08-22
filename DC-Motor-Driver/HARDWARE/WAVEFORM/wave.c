@@ -28,24 +28,36 @@ void line()
 		LCD_Fast_DrawPoint(i,220,YELLOW);
 	}
 
-	LCD_ShowxNum(45,221,1,1,12,1);          
-	
-	LCD_ShowxNum(70,221,2,1,12,1);
+//	LCD_ShowxNum(45,221,1.1,1,12,1);         
+//	
+//	LCD_ShowxNum(70,221,2,1,12,1);     
 
-	LCD_ShowxNum(95,221,3,1,12,1);
-	
-	LCD_ShowxNum(120,221,4,1,12,1);
-	
-	LCD_ShowxNum(145,221,5,1,12,1);
-	
-	LCD_ShowxNum(170,221,6,1,12,1);
-	
-	LCD_ShowxNum(195,221,7,1,12,1);
-	
-	LCD_ShowxNum(220,221,8,1,12,1);
-	
-	LCD_ShowxNum(245,221,9,1,12,1);
-	
+//	LCD_ShowxNum(95,221,3,1,12,1);    
+//	
+//	LCD_ShowxNum(120,221,4,1,12,1);
+//	
+//	LCD_ShowxNum(145,221,5,1,12,1);
+//	
+//	LCD_ShowxNum(170,221,6,1,12,1);
+//	
+//	LCD_ShowxNum(195,221,7,1,12,1);
+//	
+//	LCD_ShowxNum(220,221,8,1,12,1);
+//	
+//	LCD_ShowxNum(245,221,9,1,12,1);
+//	
+	LCD_ShowString(45,221,15,20,12,"0.1"); 
+	LCD_ShowString(70,221,15,20,12,"0.2");
+	LCD_ShowString(95,221,15,20,12,"0.3"); 
+	LCD_ShowString(120,221,15,20,12,"0.4"); 	
+	LCD_ShowString(145,221,15,20,12,"0.5"); 
+	LCD_ShowString(170,221,15,20,12,"0.6"); 
+	LCD_ShowString(195,221,15,20,12,"0.7"); 
+	LCD_ShowString(220,221,15,20,12,"0.8"); 
+	LCD_ShowString(245,221,15,20,12,"0.9"); 
+	LCD_ShowString(270,221,15,20,12,"1.0"); 
+	LCD_ShowString(295,221,15,20,12,"1.1"); 
+
 	LCD_ShowString(25,1,20,20,12,"Kp;");     //显示Kp参数标志
 	LCD_ShowString(85,1,20,20,12,"Ki;");     //显示Ki参数标志
 	LCD_ShowString(145,1,20,20,12,"Kd;");    //显示Kd参数标志
@@ -53,11 +65,11 @@ void line()
 		LCD_ShowString(205,1,20,20,12,"AN:");  //显示设定的角度标志
 	else
 		LCD_ShowString(205,1,20,20,12," V:");  //显示设定的速度标志
-	LCD_ShowString(270,221,10,20,12,"10");
-	
-	LCD_ShowString(295,221,10,20,12,"11");
-	
-	LCD_ShowString(315,221,10,20,12,"s");
+//	LCD_ShowString(270,221,10,20,12,"10");
+//	
+//	LCD_ShowString(295,221,10,20,12,"11");
+//	
+//	LCD_ShowString(315,221,10,20,12,"s");
 	
 
 //////////////////////////////////////////////
@@ -198,14 +210,20 @@ void wave(void)
 	
 	if(!mode)
 	{
-		V = PID.Rout/334*10;                   //计算实际当前转速
+		V = PID.Rout/334*20;                   //计算实际当前转速
 		LCD_Fill(21,20,320,219,WHITE);          //速度显示区域清空
 		Aim();                                 //显示当前目标值红线
 
 		for(i=t;i>0;i--)//计算本次速度对应图像
 		{
-			if(speed[i-1]==0)
-			speed[i-1] = 1;        //如果转速为0，显示时向上移动一个分辨率，便于清屏处理
+			if(speed[i-1]<=0)
+			{
+				speed[i-1] = 1;        //如果转速为0，显示时向上移动一个分辨率，便于清屏处理
+			}
+			else if(speed[i-1]>=100)
+			{
+				speed[i-1] = 100;
+			}
 			speed[i] = speed[i-1];  //将上次速度向后推移一位
 		}
 	

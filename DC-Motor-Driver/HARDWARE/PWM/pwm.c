@@ -2,7 +2,7 @@
 
 //TIM5 PWM部分初始化 设定通道2通道3为PWM输出对应引脚PA1和PA2
 //PWM输出初始化
-//arr：自动重装值 固定为（9999+1） = 10000，pwm周期为10000/1000000 = 10ms
+//arr：自动重装值 固定为（4999+1） = 5000，pwm周期为5000/1000000 = 5ms
 //psc：时钟预分频数  固定为（71+1）=72，频率为72/72000000 = 1MHZ
 void TIM5_PWM_Init()
 {  
@@ -20,7 +20,7 @@ void TIM5_PWM_Init()
 	GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA
  
    //初始化TIM5
-	TIM_TimeBaseStructure.TIM_Period = 9999; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值
+	TIM_TimeBaseStructure.TIM_Period = 4999; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值
 	TIM_TimeBaseStructure.TIM_Prescaler =71; //设置用来作为TIMx时钟频率除数的预分频值 
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0; //设置时钟分割:TDTS = Tck_tim
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式

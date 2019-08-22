@@ -80,20 +80,37 @@ void KEY_EXTI_Init()
  
 }
 
+//电机停止，PID清0初始化
+void Stop_Init()
+{
+	PID.Ek = 0;
+	PID.Ek1 = 0;
+	PID.Kd = 0;
+	PID.Ki = 0; 
+	PID.Kp = 0;
+	PID.OUT = 0;
+	PID.OUTR = 0;
+	PID.Rin = 0;
+	PID.Rout = 0;
+}
+
 //角度模式初始化
 void Angle_Init(void)
 {
 	PID.Ek = 0;
 	PID.Ek1 = 0;
 	
-	PID.Kp = 1.0;
-	PID.Ki = 3.2;
-	PID.Kd = 1.0;
+	PID.Kp = 3.4;
+	PID.Ki = 6.9;
+	PID.Kd = 0.0;
 	
 	PID.Rin = 180;
 	PID.Rout = 0;
 	PID.OUT = 0;
 	PID.OUTR = 0;
+	
+	Read_PID();
+	
 	LCD_Clear(WHITE);
 	Aim();
 	LCD_ShowString(305,1,20,20,12,"MO");//开始时按键调整目标为MO，并在LCD右上角显示
@@ -113,14 +130,15 @@ void Speed_Init(void)
 	PID.Ek = 0;
 	PID.Ek1 = 0;
 	
-	PID.Kp = 1.5;
-	PID.Ki = 2.5;
-	PID.Kd = 0.3;
+	PID.Kp = 1.8;
+	PID.Ki = 1.4;
+	PID.Kd = 1.4;
 	
 	PID.Rin = 45;
 	PID.Rout = 0;
 	PID.OUT = 0;
 	PID.OUTR = 0;
+	Read_PID();
 	LCD_Clear(WHITE);
 	Aim();
 	LCD_ShowString(305,1,10,20,12,"MO");//开始时按键调整目标为MO，并在LCD右上角显示
@@ -158,6 +176,8 @@ void EXTI0_IRQHandler(void)
 //外部中断3服务程序
 void EXTI3_IRQHandler(void)
 {
+	static u8 stop = 1;   //电机停止标志位，1停止，0旋转
+	
 	delay_ms(10);//消抖
 	if(KEY1==0)	 //按键KEY1
 	{				 
@@ -166,8 +186,9 @@ void EXTI3_IRQHandler(void)
 			case 0 : PID.Kp += 0.1;Check();printf("当前Kp为%f",PID.Kp);ShowKp();break;
 			case 1 : PID.Ki += 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
 			case 2 : PID.Kd += 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
-			case 3 : Clean_Aim();if(!mode){PID.Rin += 5;}else{PID.Rin += 10;count_A_TEMP=0;}Check();Aim();ShowAN_V();break;
-			case 4 : mode = 1;Angle_Init();count_A_TEMP=0;PWM(1,0);delay_ms(1000);t = 0;angle_sum=0;break;//角度模式
+			case 3 : Clean_Aim();if(!mode){PID.Rin += 5;}else{PID.Rin += 10;count_A_TEMP=0;PID.OUT=0;}Check();Aim();ShowAN_V();break;
+			case 4 : if(stop){Stop_Init();PWM(1,0);stop=0;}//电机停机
+							 else{mode = 1;Angle_Init();count_A_TEMP=0;t = 0;angle_sum=0;stop=1;}break;//角度模式
 			case 5 : Write_PID();break;//将画笔调整回蓝色，用于画波形
 		}				
 	}
@@ -185,12 +206,12 @@ void EXTI4_IRQHandler(void)
 			case 0 : PID.Kp -= 0.1;Check();printf("当前Kp为%f",PID.Kp);ShowKp();break;
 			case 1 : PID.Ki -= 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
 			case 2 : PID.Kd -= 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
-			case 3 : Clean_Aim();if(!mode){PID.Rin -= 5;}else{PID.Rin -= 10;count_A_TEMP=0;}Check();Aim();ShowAN_V();break;
-			case 4 : mode = 0;Speed_Init();count_A_TEMP=0;PWM(1,0);delay_ms(1000);t = 0;PID.Rout=0;break;//速度模式
+			case 3 : Clean_Aim();if(!mode){PID.Rin -= 5;}else{PID.Rin -= 10;count_A_TEMP=0;PID.OUT=0;}Check();Aim();ShowAN_V();break;
+			case 4 : mode = 0;Speed_Init();count_A_TEMP=0;PWM(1,0);delay_ms(100);t = 0;PID.Rout=0;break;//速度模式
 			case 5 : Read_PID();break;//在LCD右上角显示“ROK”标志
 		}
 	}		
-	
+		      
 	EXTI_ClearITPendingBit(EXTI_Line4);  //清除LINE4上的中断标志位  
 }
 

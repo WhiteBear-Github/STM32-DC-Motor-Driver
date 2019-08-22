@@ -44,6 +44,8 @@
 	PWM(1,0);                 //设置初始PWM为正转，占空比为0
 	start = 1;                //电机转动标志位置1，PID算法开启
 	TIM4_CNT_Init();          //100ms定时器开启
+	
+	Read_PID();               //读取eeprom
 	while(1);
 }
 

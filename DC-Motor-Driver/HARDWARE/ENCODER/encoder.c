@@ -12,7 +12,7 @@ u16 count_B = 0;         //B相捕获通道捕获的上升沿
 u16 count_BB = 0;        //B相捕获通道捕获上升沿达到65535溢出次数
 
 //编码器A相，TIM3 通道1，输入捕获，初始化
-//arr：自动重装值 固定为 (299+1) = 300，pwm周期为300/10000 = 30ms
+//arr：自动重装值 固定为 (99+1) = 100，pwm周期为100/10000 = 10ms
 //psc：时钟预分频数  固定为（7199+1）=7200，频率为7200/72000000 = 10KHZ
 void Encoder_A_Init()
 {
@@ -33,7 +33,7 @@ void Encoder_A_Init()
 	GPIO_Init(GPIOC, &GPIO_InitStructure);//初始化GPIOC
  
    //初始化TIM3
-	TIM_TimeBaseStructure.TIM_Period = 299; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值
+	TIM_TimeBaseStructure.TIM_Period = 99; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值
 	TIM_TimeBaseStructure.TIM_Prescaler = 7199; //设置用来作为TIM3时钟频率除数的预分频值 
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0; //设置时钟分割:TDTS = Tck_tim
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
@@ -44,7 +44,7 @@ void Encoder_A_Init()
   TIM3_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	//上升沿捕获
   TIM3_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //直接映射到CH1上
   TIM3_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	 //配置输入分频,不分频，即每个上升沿记录1次 
-  TIM3_ICInitStructure.TIM_ICFilter = 0x00;//IC1F=0000 配置输入滤波器 不滤波
+  TIM3_ICInitStructure.TIM_ICFilter = 6;//IC1F=0110 配置输入滤波器 fSAMPLING=fDTS/4， N=6（随意设置，真实值可用示波器测下编码器频率再计算所得）
   TIM_ICInit(TIM3, &TIM3_ICInitStructure);
 	
 	//中断分组初始化
@@ -100,7 +100,7 @@ void Encoder_B_Init()
 	//中断分组初始化
 	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;  //TIM3中断
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  //先占优先级0级
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;  //从优先级1级
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;  //从优先级0级
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ通道被使能
 	NVIC_Init(&NVIC_InitStructure);  //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器 
 
@@ -118,7 +118,7 @@ void TIM3_IRQHandler()
 		count_A ++;
 		if(mode)
 		{
-			count_A_TEMP ++;
+				count_A_TEMP ++;
 		}	
 		if(count_A == 65535 )
 		{

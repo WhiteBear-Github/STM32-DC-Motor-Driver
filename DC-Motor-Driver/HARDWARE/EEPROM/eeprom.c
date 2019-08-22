@@ -4,6 +4,7 @@
 #include "lcd.h"
 #include "usart.h"
 #include "wave.h"
+#include "encoder.h"
 
 //24C02共有256个字节大小，地址为0~255
 //连续数据，地址写入从小往大写
@@ -11,7 +12,7 @@
 24C02的255位用作标志位，不要在此位写入其他数据，特殊情况另做处理
 *************************************************************/
 
-u8 aimv = 0;
+u8 aimv = 0;  //读取目标速度或角度为三位数则为1，两位数则为0
 
 //初始化IIC接口
 void AT24C02_Init(void)
@@ -197,17 +198,40 @@ void Write_PID()
 	static u8 ok =0;//切换写入成功标志"ok"颜色，便于区分
 	
 	PID_NumToArray();  //将PID参数转换成数组
-	
-	AT24C02_Write(0,kp,5); //将PID参数写入24C02
-	AT24C02_Write(6,ki,5);
-	AT24C02_Write(11,kd,5); 
-	if(PID.Rin == 100)         //向24C02写入目标速度
+	if(!mode)
 	{
-		AT24C02_WriteLenByte(16,PID.Rin,3);
-		aimv = 1;
+		pidout[0] = (u16)(PID.OUT/1000)%10;
+		pidout[1] = (u16)(PID.OUT/100)%10;
+		pidout[2] = (u16)(PID.OUT/10)%10;
+		pidout[3] = (u16)PID.OUT%10;
+		pidout[4] = '\0';
+		AT24C02_Write(0,kp,5); //将PID参数写入24C02
+		AT24C02_Write(5,ki,5);
+		AT24C02_Write(10,kd,5); 
+	  AT24C02_Write(15,pidout,5); 
+		if(PID.Rin == 100)         //向24C02写入目标速度
+		{
+			AT24C02_WriteLenByte(20,PID.Rin,3);
+			aimv = 1; //读取目标速度或角度为三位数则为1，两位数则为0
+		}
+	
+		else
+			AT24C02_WriteLenByte(20,PID.Rin,2);
 	}
 	else
-		AT24C02_WriteLenByte(16,PID.Rin,2);
+	{
+		AT24C02_Write(25,kp,5); //将PID参数写入24C02
+		AT24C02_Write(30,ki,5);
+		AT24C02_Write(35,kd,5);
+		if(PID.Rin >= 100)         //向24C02写入目标角度
+		{
+			AT24C02_WriteLenByte(40,PID.Rin,3);
+			aimv = 1; //读取目标速度或角度为三位数则为1，两位数则为0
+		}
+	
+		else
+			AT24C02_WriteLenByte(40,PID.Rin,2);		
+	}
 	if(ok)  //在LCD右上角显示红蓝两色“WOK”标志
 	{
 		POINT_COLOR = RED;
@@ -224,34 +248,79 @@ void Write_PID()
 }
 
 void Read_PID()
-{
-	AT24C02_Read(0,kp,5);       //分别读取24C02存储的PID参数(将数组转换为浮点数)
+{ //分别读取24C02存储的PID参数(将数组转换为浮点数)
+	if(mode)
+	{
+		count_A_TEMP = 0;
+	}
+	if(!mode)
+	{
+		AT24C02_Read(0,kp,5);      
+	}
+	else
+	{
+		AT24C02_Read(25,kp,5);
+	}
 	PID.Kp = (u8)(kp[1] - '0') + (double)((kp[3] - '0')/10.0); 
 	if(kp[0] == '-')
 	{
 		PID.Kp = -PID.Kp;
 	}
 	
-	AT24C02_Read(6,ki,5);
+	if(!mode)
+	{
+		AT24C02_Read(5,ki,5);      
+	}
+	else
+	{
+		AT24C02_Read(30,ki,5);
+	}
 	PID.Ki = (u8)(ki[1] - '0') + (double)((ki[3] - '0')/10.0); 
 	if(ki[0] == '-')
 	{
 		PID.Ki = -PID.Ki;
 	}
 	
-	AT24C02_Read(11,kd,5); 
+	if(!mode)
+	{
+		AT24C02_Read(10,kd,5);      
+	}
+	else
+	{
+		AT24C02_Read(35,kd,5);
+	}
 	PID.Kd = (u8)(kd[1] - '0') + (double)((kd[3] - '0')/10.0); 
 	if(kd[0] == '-')
 	{
 		PID.Kd = -PID.Kd;
 	}
+	
+	if(!mode)
+	{
+		AT24C02_Read(15,pidout,5);   
+		PID.OUT = (u16)(kd[1]*1000 - '0') + (u16)(kd[1]*100 - '0')+ (u16)(kd[2]*10 - '0') + (u16)(kd[3] - '0');		
+	}
+	
 	if(aimv)     //读取目标速度
 	{
-		PID.Rin = AT24C02_ReadLenByte(16,3);
+		if(!mode)
+			PID.Rin = AT24C02_ReadLenByte(20,3);
+		else
+			PID.Rin = AT24C02_ReadLenByte(40,3);
 		aimv = 0;
 	}
 	else
-		PID.Rin = AT24C02_ReadLenByte(16,2);
+	{
+		if(!mode)
+		{
+			PID.Rin = AT24C02_ReadLenByte(20,2);
+		}
+		else
+		{
+			PID.Rin = AT24C02_ReadLenByte(40,2);
+		}
+	}
+		
 	
 	Aim();//目标红线显示
 	printf("当前Kp为%f",PID.Kp);  //在串口和LCD上显示参数值
@@ -260,7 +329,7 @@ void Read_PID()
 	ShowKp();
 	ShowKi();
 	ShowKd(); 
-	
+	ShowAN_V();
 	LCD_ShowString(285,1,15,20,12,"ROK");//在LCD右上角显示“ROK”标志
 }
 	
