@@ -183,9 +183,9 @@ void EXTI3_IRQHandler(void)
 	{				 
 		switch(j)
 		{
-			case 0 : PID.Kp += 0.1;Check();printf("当前Kp为%f",PID.Kp);ShowKp();break;
-			case 1 : PID.Ki += 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
-			case 2 : PID.Kd += 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
+			case 0 : PID.Kp += 0.1;Check();/*printf("当前Kp为%f",PID.Kp);*/ShowKp();break;
+			case 1 : PID.Ki += 0.1;Check();/*printf("当前Ki为%f",PID.Ki);*/ShowKi();break;
+			case 2 : PID.Kd += 0.1;Check();/*printf("当前Kd为%f",PID.Kd);*/ShowKd();break;
 			case 3 : Clean_Aim();if(!mode){PID.Rin += 5;}else{PID.Rin += 10;count_A_TEMP=0;PID.OUT=0;}Check();Aim();ShowAN_V();break;
 			case 4 : if(stop){Stop_Init();PWM(1,0);stop=0;}//电机停机
 							 else{mode = 1;Angle_Init();count_A_TEMP=0;t = 0;angle_sum=0;stop=1;}break;//角度模式
@@ -203,9 +203,9 @@ void EXTI4_IRQHandler(void)
 	{
 		switch(j)
 		{
-			case 0 : PID.Kp -= 0.1;Check();printf("当前Kp为%f",PID.Kp);ShowKp();break;
-			case 1 : PID.Ki -= 0.1;Check();printf("当前Ki为%f",PID.Ki);ShowKi();break;
-			case 2 : PID.Kd -= 0.1;Check();printf("当前Kd为%f",PID.Kd);ShowKd();break;
+			case 0 : PID.Kp -= 0.1;Check();/*printf("当前Kp为%f",PID.Kp);*/ShowKp();break;
+			case 1 : PID.Ki -= 0.1;Check();/*printf("当前Ki为%f",PID.Ki);*/ShowKi();break;
+			case 2 : PID.Kd -= 0.1;Check();/*printf("当前Kd为%f",PID.Kd);*/ShowKd();break;
 			case 3 : Clean_Aim();if(!mode){PID.Rin -= 5;}else{PID.Rin -= 10;count_A_TEMP=0;PID.OUT=0;}Check();Aim();ShowAN_V();break;
 			case 4 : mode = 0;Speed_Init();count_A_TEMP=0;PWM(1,0);delay_ms(100);t = 0;PID.Rout=0;break;//速度模式
 			case 5 : Read_PID();break;//在LCD右上角显示“ROK”标志
