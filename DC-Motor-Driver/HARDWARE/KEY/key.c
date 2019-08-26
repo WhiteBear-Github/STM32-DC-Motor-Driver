@@ -215,7 +215,7 @@ void EXTI4_IRQHandler(void)
 	EXTI_ClearITPendingBit(EXTI_Line4);  //清除LINE4上的中断标志位  
 }
 
-//按键操纵变量有效性判断
+//pid参数及目标设定值变量操作有效性判断
 void Check(void)
 {
 	switch(j)

@@ -1,5 +1,7 @@
 #include "sys.h"
 #include "usart.h"	  
+#include "upper.h"
+
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_OS
@@ -34,6 +36,13 @@
 
 //////////////////////////////////////////////////////////////////
 //加入以下代码,支持printf函数,而不需要选择use MicroLIB	  
+
+
+////////////////////////LGH修改说明////////////////////////
+///////////////////用于DC-MOTOR-DRIVER文件/////////////////
+//1.修改了中断优先级
+//2.在中断函数中加入了上位机命令判断
+
 #if 1
 #pragma import(__use_no_semihosting)             
 //标准库需要的支持函数                 
@@ -107,8 +116,8 @@ void uart_init(u32 bound){
 
   //Usart1 NVIC 配置
   NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		//子优先级3
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3;//抢占优先级0
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		//子优先级0
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
   
@@ -122,23 +131,24 @@ void uart_init(u32 bound){
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
 
   USART_Init(USART1, &USART_InitStructure); //初始化串口1
+	
   USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//开启串口接受中断
   USART_Cmd(USART1, ENABLE);                    //使能串口1 
 
 }
 
 void USART1_IRQHandler(void)                	//串口1中断服务程序
-	{
+{
 	u8 Res;
 #if SYSTEM_SUPPORT_OS 		//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntEnter();    
 #endif
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
-		{
+	{
 		Res =USART_ReceiveData(USART1);	//读取接收到的数据
 		
 		if((USART_RX_STA&0x8000)==0)//接收未完成
-			{
+		{
 			if(USART_RX_STA&0x4000)//接收到了0x0d
 				{
 				if(Res!=0x0a)USART_RX_STA=0;//接收错误,重新开始
@@ -149,13 +159,15 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 				if(Res==0x0d)USART_RX_STA|=0x4000;
 				else
 					{
-					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;
-					USART_RX_STA++;
-					if(USART_RX_STA>(USART_REC_LEN-1))USART_RX_STA=0;//接收数据错误,重新开始接收	  
+						USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;
+						USART_RX_STA++;
+						if(USART_RX_STA>(USART_REC_LEN-1))USART_RX_STA=0;//接收数据错误,重新开始接收	  
 					}		 
 				}
-			}   		 
-     } 
+				Upper_Computer();
+		}
+  }
+
 #if SYSTEM_SUPPORT_OS 	//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntExit();  											 
 #endif

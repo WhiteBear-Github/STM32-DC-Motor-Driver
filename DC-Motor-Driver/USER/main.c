@@ -9,10 +9,11 @@
 #include "lcd.h"
 #include "wave.h"
 #include "eeprom.h"
-
+#include "upper.h"
 
  int main(void)
 {
+
 	u8 lcd_id[12];			//存放LCD ID字符串
 	
 	delay_init();             //延时函数初始化

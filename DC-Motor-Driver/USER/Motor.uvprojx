@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\PWM;..\HARDWARE\PID;..\HARDWARE\ENCODER;..\HARDWARE\LCD;..\HARDWARE\WAVEFORM;..\HARDWARE\EEPROM</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\PWM;..\HARDWARE\PID;..\HARDWARE\ENCODER;..\HARDWARE\LCD;..\HARDWARE\WAVEFORM;..\HARDWARE\EEPROM;..\HARDWARE\UPPER</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -472,6 +472,11 @@
               <FileName>iic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\EEPROM\iic.c</FilePath>
+            </File>
+            <File>
+              <FileName>upper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\UPPER\upper.c</FilePath>
             </File>
           </Files>
         </Group>

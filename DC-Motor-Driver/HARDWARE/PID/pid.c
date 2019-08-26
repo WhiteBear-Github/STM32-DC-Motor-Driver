@@ -5,6 +5,7 @@
 #include "wave.h"
 #include "delay.h"
 
+
 PID_DEFINE  PID;
 
 u8 mode = 0;   //测速，与测角度转换标志位，0：转速，1：角度
@@ -41,7 +42,7 @@ void TIM4_CNT_Init(void)
 
 	//中断优先级NVIC设置
 	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;  //TIM4中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  //先占优先级0级
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;  //先占优先级0级
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;  //从优先级1级
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ通道被使能
 	NVIC_Init(&NVIC_InitStructure);  //初始化NVIC寄存器
@@ -114,11 +115,11 @@ void TIM4_IRQHandler ()
 				{
 					PID.OUT = 0;
 				}
-				printf("目标角度为%lf 度\n",PID.Rin);
-				printf("当前转过角度为%lf 度\n",angle_sum);
-				printf("目标速度为%lf r/s\n",angle/360);
-				printf("当前转速为%lf r/s\n",PID.Rout/334*20);
-				printf("输出占空比为%lf \n",PID.OUT/4999*100);
+//				printf("目标角度为%lf 度\n",PID.Rin);
+//				printf("当前转过角度为%lf 度\n",angle_sum);
+//				printf("目标速度为%lf r/s\n",angle/360);
+//				printf("当前转速为%lf r/s\n",PID.Rout/334*20);
+//				printf("输出占空比为%lf \n",PID.OUT/4999*100);
 				PWM(1,PID.OUT);
 			
 				PID.Rout = 0;
@@ -149,9 +150,9 @@ void TIM4_IRQHandler ()
 				{
 					PID.OUT = 0;
 				}
-				printf("目标转速为%lf r/s\n",PID.Rin);
-				printf("当前转速为%lf r/s\n",PID.Rout/334*20);
-				printf("输出占空比为%lf \n",PID.OUT/4999*100);
+//				printf("目标转速为%lf r/s\n",PID.Rin);
+//				printf("当前转速为%lf r/s\n",PID.Rout/334*20);
+//				printf("输出占空比为%lf \n",PID.OUT/4999*100);
 				PID.Rout  = 0;
 				PWM(1,PID.OUT);	
 			}		

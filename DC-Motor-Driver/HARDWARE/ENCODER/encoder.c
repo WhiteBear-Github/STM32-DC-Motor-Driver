@@ -2,6 +2,7 @@
 #include "sys.h"
 #include "pid.h"
 
+
 u16 count_A = 0;         //A相捕获通道捕获的上升沿
 u16 count_AA = 0;        //A相捕获通道捕获上升沿达到65535溢出次数
 u16 count_A_TEMP = 0;        //A相编码器数据，暂存值，用于存储计算转过角度
@@ -12,7 +13,7 @@ u16 count_B = 0;         //B相捕获通道捕获的上升沿
 u16 count_BB = 0;        //B相捕获通道捕获上升沿达到65535溢出次数
 
 //编码器A相，TIM3 通道1，输入捕获，初始化
-//arr：自动重装值 固定为 (99+1) = 100，pwm周期为100/10000 = 10ms
+//arr：自动重装值 固定为 (99+1) = 10，pwm周期为100/10000 = 10ms
 //psc：时钟预分频数  固定为（7199+1）=7200，频率为7200/72000000 = 10KHZ
 void Encoder_A_Init()
 {
@@ -49,8 +50,8 @@ void Encoder_A_Init()
 	
 	//中断分组初始化
 	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;  //TIM3中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  //先占优先级0级
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;  //从优先级0级
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;  //先占优先级0级
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;  //从优先级1级
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ通道被使能
 	NVIC_Init(&NVIC_InitStructure);  //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器 
 
@@ -127,6 +128,7 @@ void TIM3_IRQHandler()
 		}
 		TIM_ClearITPendingBit(TIM3,TIM_IT_CC1);//清除通道1捕获中断位
 	}
+
 /***********该段程序未启用************/
 	else if (TIM_GetITStatus(TIM3,TIM_IT_CC2) != RESET)   
 	{
